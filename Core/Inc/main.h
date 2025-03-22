@@ -59,7 +59,7 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define PERIOD_MASTERTIMER 27200
 #define PERIOD_FSBB 27200
-#define DEADTIME 50
+#define DEADTIME 75
 #define ADC_PhB_VIN_Pin GPIO_PIN_3
 #define ADC_PhB_VIN_GPIO_Port GPIOC
 #define ADC_PhA_VIN_Pin GPIO_PIN_0

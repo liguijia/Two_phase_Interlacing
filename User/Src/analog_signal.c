@@ -46,10 +46,10 @@ static board_adc_calibration_t adc_cali_array[] = {
         {0.0008117675f, -0.0000000000f}, // phb_input_voltage 校准参数 (k, b)
         {0.0008117675f, -0.0000000000f}, // output_voltage 校准参数 (k, b)
         // INA240A2 0.002R VREF=3.3V or INA240A1 0.005R VREF=3.3V
-        {0.0009980598f, -32.600164291f}, // pha_input_current 校准参数 (k, b)
-        {0.0009980598f, -32.600164291f}, // phb_input_current 校准参数 (k, b)
-        {0.0009980598f, -32.600164291f}, // pha_output_current 校准参数 (k, b)
-        {0.0009980598f, -32.600164291f}, // phb_output_current 校准参数 (k, b)
+        {0.0004990299f, -16.300082146f}, // pha_input_current 校准参数 (k, b)
+        {0.0004990299f, -16.300082146f}, // phb_input_current 校准参数 (k, b)
+        {0.0004990299f, -16.300082146f}, // pha_output_current 校准参数 (k, b)
+        {0.0004990299f, -16.300082146f}, // phb_output_current 校准参数 (k, b)
     },
     {
         {0x00000000, 0x00000000, 0x00000111}, // STM32 唯一 ID
