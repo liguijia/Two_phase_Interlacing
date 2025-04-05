@@ -25,10 +25,6 @@ uint16_t PWM_FSBB_PERIOD_ZERO = 0;               // FSBB周期长度零位置
 uint16_t MASTER_TIMER_PERIOD_MAX = PERIOD_MASTERTIMER; // Master Timer 最大周期
 
 // 测试用HRITM PWM输出初始化（已在CUBEMX中配置）
-// FSBB模式的初始频率为200kHz，占空比为0，相位为180°
-// LCC模式的初始频率为114kHz，占空比为0，相位为180°
-// 对于FSBB模式，A通道为主通道，E通道为从通道
-// 对于LCC模式，D通道为主通道，C通道为从通道
 void HRTIM_PWM_init(void)
 {
     //

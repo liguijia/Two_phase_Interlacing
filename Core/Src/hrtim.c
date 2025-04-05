@@ -114,7 +114,6 @@ void MX_HRTIM1_Init(void)
     Error_Handler();
   }
   pTimerCtl.UpDownMode = HRTIM_TIMERUPDOWNMODE_UP;
-  pTimerCtl.TrigHalf = HRTIM_TIMERTRIGHALF_DISABLED;
   pTimerCtl.GreaterCMP3 = HRTIM_TIMERGTCMP3_EQUAL;
   pTimerCtl.GreaterCMP1 = HRTIM_TIMERGTCMP1_EQUAL;
   pTimerCtl.DualChannelDacEnable = HRTIM_TIMER_DCDE_DISABLED;
@@ -130,13 +129,13 @@ void MX_HRTIM1_Init(void)
   pTimerCfg.DeadTimeInsertion = HRTIM_TIMDEADTIMEINSERTION_ENABLED;
   pTimerCfg.DelayedProtectionMode = HRTIM_TIMER_A_B_C_DELAYEDPROTECTION_DISABLED;
   pTimerCfg.UpdateTrigger = HRTIM_TIMUPDATETRIGGER_MASTER;
-  pTimerCfg.ResetTrigger = HRTIM_TIMRESETTRIGGER_MASTER_CMP1;
+  pTimerCfg.ResetTrigger = HRTIM_TIMRESETTRIGGER_OTHER1_CMP2;
   pTimerCfg.ResetUpdate = HRTIM_TIMUPDATEONRESET_ENABLED;
   if (HAL_HRTIM_WaveformTimerConfig(&hhrtim1, HRTIM_TIMERINDEX_TIMER_A, &pTimerCfg) != HAL_OK)
   {
     Error_Handler();
   }
-  pTimerCfg.ResetTrigger = HRTIM_TIMRESETTRIGGER_OTHER1_CMP2;
+  pTimerCfg.ResetTrigger = HRTIM_TIMRESETTRIGGER_MASTER_CMP1;
   pTimerCfg.ResetUpdate = HRTIM_TIMUPDATEONRESET_DISABLED;
   if (HAL_HRTIM_WaveformTimerConfig(&hhrtim1, HRTIM_TIMERINDEX_TIMER_B, &pTimerCfg) != HAL_OK)
   {
@@ -148,7 +147,7 @@ void MX_HRTIM1_Init(void)
     Error_Handler();
   }
   pTimerCfg.DelayedProtectionMode = HRTIM_TIMER_D_E_DELAYEDPROTECTION_DISABLED;
-  pTimerCfg.ResetTrigger = HRTIM_TIMRESETTRIGGER_OTHER1_CMP4;
+  pTimerCfg.ResetTrigger = HRTIM_TIMRESETTRIGGER_OTHER2_CMP2;
   pTimerCfg.ResetUpdate = HRTIM_TIMUPDATEONRESET_ENABLED;
   if (HAL_HRTIM_WaveformTimerConfig(&hhrtim1, HRTIM_TIMERINDEX_TIMER_D, &pTimerCfg) != HAL_OK)
   {
@@ -159,22 +158,7 @@ void MX_HRTIM1_Init(void)
   {
     Error_Handler();
   }
-  pCompareCfg.CompareValue = PERIOD_FSBB / 2;
-  pCompareCfg.AutoDelayedMode = HRTIM_AUTODELAYEDMODE_REGULAR;
-  pCompareCfg.AutoDelayedTimeout = 0x0000;
-
-  if (HAL_HRTIM_WaveformCompareConfig(&hhrtim1, HRTIM_TIMERINDEX_TIMER_A, HRTIM_COMPAREUNIT_2, &pCompareCfg) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  pCompareCfg.CompareValue = 0xFFDF;
   if (HAL_HRTIM_WaveformCompareConfig(&hhrtim1, HRTIM_TIMERINDEX_TIMER_A, HRTIM_COMPAREUNIT_3, &pCompareCfg) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  pCompareCfg.CompareValue = PERIOD_FSBB;
-
-  if (HAL_HRTIM_WaveformCompareConfig(&hhrtim1, HRTIM_TIMERINDEX_TIMER_A, HRTIM_COMPAREUNIT_4, &pCompareCfg) != HAL_OK)
   {
     Error_Handler();
   }
@@ -253,15 +237,24 @@ void MX_HRTIM1_Init(void)
   {
     Error_Handler();
   }
+  pTimerCtl.TrigHalf = HRTIM_TIMERTRIGHALF_DISABLED;
   if (HAL_HRTIM_WaveformTimerControl(&hhrtim1, HRTIM_TIMERINDEX_TIMER_B, &pTimerCtl) != HAL_OK)
   {
     Error_Handler();
   }
-  pCompareCfg.CompareValue = 0xFFDF;
   if (HAL_HRTIM_WaveformCompareConfig(&hhrtim1, HRTIM_TIMERINDEX_TIMER_B, HRTIM_COMPAREUNIT_1, &pCompareCfg) != HAL_OK)
   {
     Error_Handler();
   }
+  pCompareCfg.CompareValue = PERIOD_FSBB / 2;
+  pCompareCfg.AutoDelayedMode = HRTIM_AUTODELAYEDMODE_REGULAR;
+  pCompareCfg.AutoDelayedTimeout = 0x0000;
+
+  if (HAL_HRTIM_WaveformCompareConfig(&hhrtim1, HRTIM_TIMERINDEX_TIMER_B, HRTIM_COMPAREUNIT_2, &pCompareCfg) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  pCompareCfg.CompareValue = 0xFFDF;
   if (HAL_HRTIM_WaveformCompareConfig(&hhrtim1, HRTIM_TIMERINDEX_TIMER_B, HRTIM_COMPAREUNIT_3, &pCompareCfg) != HAL_OK)
   {
     Error_Handler();

@@ -98,18 +98,17 @@ void get_all_analog_data(analogdata_t *data)
     data->v_output    = get_mapped_value(&v_output_filter,
                                          &adc_cali_array[0].v_output);
 
-    // 电流采集
-    data->i_pha_input  = get_mapped_value(&i_pha_input_filter,
-                                          &adc_cali_array[0].i_pha_input);
+    // 电流采样
+    data->i_input  = get_mapped_value(&i_pha_input_filter,
+                                      &adc_cali_array[0].i_pha_input);
     data->i_phb_input  = get_mapped_value(&i_phb_input_filter,
                                           &adc_cali_array[0].i_phb_input);
+    data->i_pha_input  = data->i_input - data->i_phb_input;
     data->i_pha_output = get_mapped_value(&i_pha_output_filter,
                                           &adc_cali_array[0].i_pha_output);
     data->i_phb_output = get_mapped_value(&i_phb_output_filter,
                                           &adc_cali_array[0].i_phb_output);
-
-    // 计算总输出电流
-    data->output_current = data->i_pha_output + data->i_phb_output;
+    data->i_output     = data->i_pha_output + data->i_phb_output;
 }
 
 // 获取单独模拟量

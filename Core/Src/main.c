@@ -28,7 +28,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "bsp_hrtim.h"
+#include "two_phase_fsbb_ctrl.h"
 #include "analog_signal.h"
 #include "buzzer.h"
 /* USER CODE END Includes */
@@ -51,8 +51,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-analogdata_t analogdata;
-float test_i = 0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -103,25 +102,23 @@ int main(void)
   MX_HRTIM1_Init();
   MX_TIM3_Init();
   MX_USART1_UART_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
     HAL_GPIO_WritePin(EN_12V_GPIO_Port, EN_12V_Pin, GPIO_PIN_SET);
     HAL_Delay(114);
-    HRTIM_PWM_init();
+    FSBB_CTRL_INIT();
     HAL_Delay(114);
-    BSP_ADC_Convert_Start();
     Buzzer_Startup_Prompting();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
     while (1) {
-        test_i = get_phb_input_current();
-        get_all_analog_data(&analogdata);
-        HAL_Delay(10);
-        HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
-        HAL_Delay(114);
-        HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-        HAL_Delay(114);
+        // HAL_Delay(10);
+        // HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+        // HAL_Delay(114);
+        // HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+        // HAL_Delay(114);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

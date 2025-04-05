@@ -14,7 +14,7 @@
   },
   "outDir": "build",
   "deviceName": null,
-  "packDir": null,
+  "packDir": ".pack/Keil/STM32G4xx_DFP.1.1.0",
   "miscInfo": {
     "uid": "0d0331f0a51e830eb349cb1e78dc6c3f"
   },
@@ -24,7 +24,7 @@
       "toolchain": "GCC",
       "compileConfig": {
         "cpuType": "Cortex-M4",
-        "floatingPointHardware": "none",
+        "floatingPointHardware": "single",
         "scatterFilePath": "",
         "useCustomScatterFile": true,
         "storageLayout": {
@@ -72,6 +72,7 @@
       "custom_dep": {
         "name": "default",
         "incList": [
+          ".",
           "Core/Inc",
           "Drivers/STM32G4xx_HAL_Driver/Inc",
           "Drivers/STM32G4xx_HAL_Driver/Inc/Legacy",
@@ -95,9 +96,8 @@
           "beforeBuildTasks": [],
           "afterBuildTasks": [],
           "global": {
-            "$float-abi-type": "softfp",
-            "output-debug-info": "enable",
-            "misc-control": []
+            "$float-abi-type": "hard",
+            "output-debug-info": "enable"
           },
           "c/cpp-compiler": {
             "language-c": "c11",
@@ -105,9 +105,7 @@
             "optimization": "level-debug",
             "warnings": "all-warnings",
             "one-elf-section-per-function": true,
-            "one-elf-section-per-data": true,
-            "C_FLAGS": "",
-            "CXX_FLAGS": ""
+            "one-elf-section-per-data": true
           },
           "asm-compiler": {
             "ASM_FLAGS": "-DDEBUG"
@@ -116,7 +114,7 @@
             "output-format": "elf",
             "remove-unused-input-sections": true,
             "LD_FLAGS": "-TSTM32G474RBTX_FLASH.ld",
-            "LIB_FLAGS": ""
+            "$toolName": "auto"
           }
         }
       }
