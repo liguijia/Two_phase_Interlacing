@@ -10,7 +10,7 @@
 #define ADC1_DATA_LEN      (4U)
 #define ADC2_DATA_LEN      (3U)
 
-#define FILTER_WINDOW_SIZE 8 // 定义滤波窗口大小
+#define FILTER_WINDOW_SIZE 256 // 定义滤波窗口大小
 
 uint16_t adc1_data[ADC1_DATA_LEN * 2] = {0};
 uint16_t adc2_data[ADC2_DATA_LEN * 2] = {0};
@@ -49,7 +49,7 @@ static board_adc_calibration_t adc_cali_array[] = {
         {0.0004990299f, -16.300082146f}, // pha_input_current 校准参数 (k, b)
         {0.0004990299f, -16.300082146f}, // phb_input_current 校准参数 (k, b)
         {0.0004990299f, -16.300082146f}, // pha_output_current 校准参数 (k, b)
-        {0.0004990299f, -16.300082146f}, // phb_output_current 校准参数 (k, b)
+        {0.0004990299f, -16.400082146f}, // phb_output_current 校准参数 (k, b)
     },
     {
         {0x00000000, 0x00000000, 0x00000111}, // STM32 唯一 ID

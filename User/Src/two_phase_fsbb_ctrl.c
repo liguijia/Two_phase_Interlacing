@@ -10,6 +10,7 @@
 
 #define FSBB_GENERAL_TO_NARROW_RATIO 0.9f // 广义占空比到狭义占空比的比例
 
+incremental_pid_t pid_all_current;
 //
 incremental_pid_t pid_pha_voltage_h;
 incremental_pid_t pid_pha_voltage_l;
@@ -31,32 +32,27 @@ analogdata_t analogdata;
 void FSBB_PID_init()
 {
     // 初始化pid
+    incremental_pid_init(&pid_all_current, 0.08f, 0.01f, 0, -2.0f, 2.0f);
     // Phase A PID
-    incremental_pid_init(&pid_pha_voltage_h, 0.5f, 0.05f, 0, 15.0f, -15.0f);
-    incremental_pid_init(&pid_pha_voltage_l, 0.5f, 0.05f, 0, 15.0f, -15.0f);
-    incremental_pid_init(&pid_pha_power, 0.04f, 0.008f, 0, 15.0f, -15.0f);
-    incremental_pid_init(&pid_pha_current, 0.005f, 0.0005f, 0, 2.0f, -2.0f);
+    incremental_pid_init(&pid_pha_current, 0.08f, 0.01f, 0, -2.0f, 2.0f);
     // Phase B PID
-    incremental_pid_init(&pid_pha_voltage_h, 0.5f, 0.05f, 0, 15.0f, -15.0f);
-    incremental_pid_init(&pid_pha_voltage_l, 0.5f, 0.05f, 0, 15.0f, -15.0f);
-    incremental_pid_init(&pid_pha_power, 0.04f, 0.008f, 0, 15.0f, -15.0f);
-    incremental_pid_init(&pid_pha_current, 0.005f, 0.0005f, 0, 2.0f, -2.0f);
+    incremental_pid_init(&pid_phb_current, 0.08f, 0.01f, 0, -2.0f, 2.0f);
 
     //
-    float set_current   = 2.0f;
-    float set_vlotage_h = 26.0f;
-    //
+    // float set_current   = 2.0f;
+    // float set_vlotage_h = 26.0f;
+    pid_all_current.setValue = 5.0f;
 
     // pid_pha_power.setValue     = 30.0f;
-    pid_pha_voltage_h.setValue = set_vlotage_h;
+    // pid_pha_voltage_h.setValue = set_vlotage_h;
     // pid_pha_voltage_l.setValue = 8.0f;
-    pid_pha_current.setValue = set_current / 2;
+    pid_pha_current.setValue = 1.0f;
 
     //
     // pid_pha_power.setValue     = 30.0f;
-    pid_phb_voltage_h.setValue = set_vlotage_h;
+    // pid_phb_voltage_h.setValue = set_vlotage_h;
     // pid_pha_voltage_l.setValue = 8.0f;
-    pid_phb_current.setValue = set_current / 2;
+    pid_phb_current.setValue = 1.0f;
 }
 //
 void FSBB_CTRL_INIT(void)
@@ -105,11 +101,11 @@ void FSBB_pwm_set_factor(float scaling_factor, char phase)
 
     } else {
         if (phase == 'A') {
-            FSBB_pwm_set(scaling_factor, 'A');
             FSBB_pwm_set(1.0f, 'B');
+            FSBB_pwm_set(1.0f / scaling_factor, 'A');
         } else if (phase == 'B') {
-            FSBB_pwm_set(scaling_factor, 'C');
             FSBB_pwm_set(1.0f, 'D');
+            FSBB_pwm_set(1.0f / scaling_factor, 'C');
         } else {
             // 处理无效的通道
             Error_Handler();
@@ -138,8 +134,8 @@ void FSBB_output_start(void)
 {
     float input_voltage  = get_pha_input_voltage();
     float output_voltage = get_output_voltage();
-    FSBB_pwm_set_factor(output_voltage / input_voltage, 'A');
-    FSBB_pwm_set_factor(output_voltage / input_voltage, 'B');
+    FSBB_pwm_set_factor(24 / input_voltage, 'A');
+    FSBB_pwm_set_factor(24 / input_voltage, 'B');
     HAL_HRTIM_WaveformOutputStart(&hhrtim1, HRTIM_OUTPUT_TA1 | HRTIM_OUTPUT_TA2 | HRTIM_OUTPUT_TB1 | HRTIM_OUTPUT_TB2 |
                                                 HRTIM_OUTPUT_TC1 | HRTIM_OUTPUT_TC2 | HRTIM_OUTPUT_TD1 | HRTIM_OUTPUT_TD2);
 }
@@ -153,44 +149,11 @@ void fsbb_pwm_output_stop(void)
 //
 void HAL_HRTIM_RepetitionEventCallback(HRTIM_HandleTypeDef *hhrtim, uint32_t TimerIdx)
 {
-
-    // // adc线性映射
-    // float Vin  = get_fsbb_input_voltage();
-    // float Iin  = get_fsbb_input_current();
-    // float Vout = get_fsbb_output_voltage();
-    // float Iout = get_fsbb_output_current();
-
-    // // error检查
-
-    // // pid环路计算
-    // const float target_power = 45.0f;
-    // //
-    // pid_power.setValue             = target_power;
-    // float pid_cap_voltage_h_output = incremental_pid_compute(&pid_voltage_h, Vout);
-    // float pid_cap_voltage_l_output = incremental_pid_compute(&pid_voltage_l, Vout);
-    // float pid_power_output         = incremental_pid_compute(&pid_power, Vin * Iin);
-
-    // float current_ref = pid_power_output;
-    // if (current_ref > pid_cap_voltage_h_output) {
-    //     pid_power.output = pid_cap_voltage_h_output;
-    //     current_ref      = pid_cap_voltage_h_output;
-    // } else if (current_ref < pid_cap_voltage_l_output) {
-    //     pid_power.output = pid_cap_voltage_l_output;
-    //     current_ref      = pid_cap_voltage_l_output;
-    // } else {
-    //     pid_voltage_h.output = current_ref;
-    //     pid_voltage_l.output = current_ref;
-    // }
-
-    // pid_current.setValue = current_ref;
-    // general_duty         = incremental_pid_compute(&pid_current, Iout);
-
-    // // pwm输出
-    // // FSBB_pwm_set_factor(general_duty);
 }
 
 float pha_general_duty = 0;
 float phb_general_duty = 0;
+float all_general_duty = 0;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
@@ -199,25 +162,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         // const float target_power = 45.0f;
         //
         get_all_analog_data(&analogdata);
-        //
-        float current_ref     = 2.0f;
-        float pha_current_ref = current_ref / 2;
-        float phb_current_ref = current_ref / 2;
-
         // float pid_pha_voltage_h_output = incremental_pid_compute(&pid_pha_voltage_h, analogdata.v_output);
         // float pid_phb_voltage_h_output = incremental_pid_compute(&pid_phb_voltage_h, analogdata.v_output);
 
         // pha_current_ref = pid_pha_voltage_h_output;
         // phb_current_ref = pid_phb_voltage_h_output;
 
-        pid_pha_current.setValue = pha_current_ref;
-        pid_phb_current.setValue = phb_current_ref;
+        // pid_pha_current.setValue = pha_current_ref;
+        // pid_phb_current.setValue = phb_current_ref;
 
-        float pha_general_duty = incremental_pid_compute(&pid_pha_current, analogdata.i_pha_output);
-        float phb_general_duty = incremental_pid_compute(&pid_phb_current, analogdata.i_phb_output);
+        pha_general_duty = incremental_pid_compute(&pid_pha_current, analogdata.i_pha_output);
+        phb_general_duty = incremental_pid_compute(&pid_phb_current, analogdata.i_phb_output);
+        all_general_duty = incremental_pid_compute(&pid_all_current, analogdata.i_phb_output + analogdata.i_phb_output);
 
         // pwm输出
-        FSBB_pwm_set_factor(pha_general_duty, 'A');
-        FSBB_pwm_set_factor(phb_general_duty, 'B');
+        FSBB_pwm_set_factor(all_general_duty, 'A');
+        FSBB_pwm_set_factor(all_general_duty, 'B');
     }
 }

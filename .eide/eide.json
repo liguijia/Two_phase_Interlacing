@@ -14,7 +14,7 @@
   },
   "outDir": "build",
   "deviceName": null,
-  "packDir": ".pack/Keil/STM32G4xx_DFP.1.1.0",
+  "packDir": null,
   "miscInfo": {
     "uid": "0d0331f0a51e830eb349cb1e78dc6c3f"
   },
@@ -72,7 +72,6 @@
       "custom_dep": {
         "name": "default",
         "incList": [
-          ".",
           "Core/Inc",
           "Drivers/STM32G4xx_HAL_Driver/Inc",
           "Drivers/STM32G4xx_HAL_Driver/Inc/Legacy",

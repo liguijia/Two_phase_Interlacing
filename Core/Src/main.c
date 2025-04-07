@@ -105,6 +105,7 @@ int main(void)
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
     HAL_GPIO_WritePin(EN_12V_GPIO_Port, EN_12V_Pin, GPIO_PIN_SET);
+    // HAL_GPIO_WritePin(LOAD_SW_GPIO_Port, LOAD_SW_Pin, GPIO_PIN_RESET);
     HAL_Delay(114);
     FSBB_CTRL_INIT();
     HAL_Delay(114);
@@ -115,9 +116,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
     while (1) {
         // HAL_Delay(10);
-        // HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
-        // HAL_Delay(114);
-        // HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+        // get_all_analog_data(&analogdata);
+        HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+        HAL_Delay(514);
+        HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
         // HAL_Delay(114);
     /* USER CODE END WHILE */
 
