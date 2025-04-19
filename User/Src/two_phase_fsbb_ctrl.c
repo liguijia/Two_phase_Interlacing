@@ -7,21 +7,17 @@
 #include "stm32g474xx.h"
 #include "stm32g4xx_hal.h"
 #include "tim.h"
+#include <stdint.h>
 
 #define FSBB_GENERAL_TO_NARROW_RATIO 0.9f // 广义占空比到狭义占空比的比例
 
-incremental_pid_t pid_all_current;
 //
-incremental_pid_t pid_pha_voltage_h;
-incremental_pid_t pid_pha_voltage_l;
-incremental_pid_t pid_pha_current;
-incremental_pid_t pid_pha_power;
-
+incremental_pid_t pid_ref_current;
+incremental_pid_t pid_delta_current;
 //
-incremental_pid_t pid_phb_voltage_h;
-incremental_pid_t pid_phb_voltage_l;
-incremental_pid_t pid_phb_current;
-incremental_pid_t pid_phb_power;
+incremental_pid_t pid_output_vlotage;
+//
+incremental_pid_t pid_power;
 
 float test_P = 0.05f;
 float test_I = 0.005f;
@@ -32,27 +28,21 @@ analogdata_t analogdata;
 void FSBB_PID_init()
 {
     // 初始化pid
-    incremental_pid_init(&pid_all_current, 0.08f, 0.01f, 0, -2.0f, 2.0f);
-    // Phase A PID
-    incremental_pid_init(&pid_pha_current, 0.08f, 0.01f, 0, -2.0f, 2.0f);
-    // Phase B PID
-    incremental_pid_init(&pid_phb_current, 0.08f, 0.01f, 0, -2.0f, 2.0f);
 
-    //
-    // float set_current   = 2.0f;
-    // float set_vlotage_h = 26.0f;
-    pid_all_current.setValue = 5.0f;
+    // current PID
+    incremental_pid_init(&pid_ref_current, 0.0000001f, 0.006f, 0.000001, -2.0f, 2.0f);
+    // phase delta current PID
+    incremental_pid_init(&pid_delta_current, 0.00005f, 0.0005f, 0.0, 0.0f, +0.5f);
+    // voltage PID
+    incremental_pid_init(&pid_output_vlotage, 0.5f, 0.003f, 0.0f, -5.0f, +5.0f);
+    // power PID
+    incremental_pid_init(&pid_power, 0.0000001f, 0.005f, 0.0f, -27.0f, +27.0f);
 
-    // pid_pha_power.setValue     = 30.0f;
-    // pid_pha_voltage_h.setValue = set_vlotage_h;
-    // pid_pha_voltage_l.setValue = 8.0f;
-    pid_pha_current.setValue = 1.0f;
-
-    //
-    // pid_pha_power.setValue     = 30.0f;
-    // pid_phb_voltage_h.setValue = set_vlotage_h;
-    // pid_pha_voltage_l.setValue = 8.0f;
-    pid_phb_current.setValue = 1.0f;
+    // 设置PID参数
+    pid_power.setValue          = 45.0f;
+    pid_output_vlotage.setValue = 19.0f;
+    pid_ref_current.setValue    = 5.0f;
+    pid_delta_current.setValue  = 0.0f;
 }
 //
 void FSBB_CTRL_INIT(void)
@@ -71,8 +61,9 @@ void FSBB_CTRL_INIT(void)
 
     //
     FSBB_output_start();
+
     // 开启中断计算PID
-    //  HAL_HRTIM_WaveformCountStart_IT(&hhrtim1, HRTIM_TIMERID_MASTER);
+    HAL_HRTIM_WaveformCountStart_IT(&hhrtim1, HRTIM_TIMERID_MASTER);
     //
     HAL_TIM_Base_Start_IT(&htim6);
 }
@@ -134,8 +125,8 @@ void FSBB_output_start(void)
 {
     float input_voltage  = get_pha_input_voltage();
     float output_voltage = get_output_voltage();
-    FSBB_pwm_set_factor(24 / input_voltage, 'A');
-    FSBB_pwm_set_factor(24 / input_voltage, 'B');
+    FSBB_pwm_set_factor(output_voltage / input_voltage, 'A');
+    FSBB_pwm_set_factor(output_voltage / input_voltage, 'B');
     HAL_HRTIM_WaveformOutputStart(&hhrtim1, HRTIM_OUTPUT_TA1 | HRTIM_OUTPUT_TA2 | HRTIM_OUTPUT_TB1 | HRTIM_OUTPUT_TB2 |
                                                 HRTIM_OUTPUT_TC1 | HRTIM_OUTPUT_TC2 | HRTIM_OUTPUT_TD1 | HRTIM_OUTPUT_TD2);
 }
@@ -146,37 +137,48 @@ void fsbb_pwm_output_stop(void)
     HAL_HRTIM_WaveformOutputStop(&hhrtim1, HRTIM_OUTPUT_TA1 | HRTIM_OUTPUT_TA2 | HRTIM_OUTPUT_TE1 | HRTIM_OUTPUT_TE2);
 }
 
+uint32_t hrtimrepe_test_value = 0;
 //
 void HAL_HRTIM_RepetitionEventCallback(HRTIM_HandleTypeDef *hhrtim, uint32_t TimerIdx)
 {
+    if (hhrtim->Instance == HRTIM1) {
+        // 处理定时器的重复事件
+        if (TimerIdx == HRTIM_TIMERID_MASTER) {
+            // 处理主定时器的重复事件
+            // hrtimrepe_test_value++; // 设置一个测试值
+        }
+    }
 }
+//
+float target_power = 25.0f; // 目标功率
+//
+float ref_duty    = 0;
+float delta_duty  = 0;
+float ref_current = 0;
+float ref_voltage = 0;
+//
 
-float pha_general_duty = 0;
-float phb_general_duty = 0;
-float all_general_duty = 0;
-
+// 定时器中断回调函数
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     if (htim->Instance == TIM6) {
-        //
-        // const float target_power = 45.0f;
-        //
+
+        // 获取模拟数据
         get_all_analog_data(&analogdata);
-        // float pid_pha_voltage_h_output = incremental_pid_compute(&pid_pha_voltage_h, analogdata.v_output);
-        // float pid_phb_voltage_h_output = incremental_pid_compute(&pid_phb_voltage_h, analogdata.v_output);
 
-        // pha_current_ref = pid_pha_voltage_h_output;
-        // phb_current_ref = pid_phb_voltage_h_output;
+        // PID控制器
 
-        // pid_pha_current.setValue = pha_current_ref;
-        // pid_phb_current.setValue = phb_current_ref;
+        // power PID
+        ref_voltage = incremental_pid_compute(&pid_power, analogdata.i_input * analogdata.v_pha_input, target_power);
+        //  vlotage PID
+        ref_current = incremental_pid_compute(&pid_output_vlotage, analogdata.v_output, ref_voltage);
+        // current PID
+        ref_duty = incremental_pid_compute(&pid_ref_current, analogdata.i_output, ref_current);
 
-        pha_general_duty = incremental_pid_compute(&pid_pha_current, analogdata.i_pha_output);
-        phb_general_duty = incremental_pid_compute(&pid_phb_current, analogdata.i_phb_output);
-        all_general_duty = incremental_pid_compute(&pid_all_current, analogdata.i_phb_output + analogdata.i_phb_output);
-
+        // phase delta current PID
+        delta_duty = incremental_pid_compute(&pid_delta_current, analogdata.i_pha_output - analogdata.i_phb_output, 0.0f);
         // pwm输出
-        FSBB_pwm_set_factor(all_general_duty, 'A');
-        FSBB_pwm_set_factor(all_general_duty, 'B');
+        FSBB_pwm_set_factor(ref_duty + delta_duty, 'A');
+        FSBB_pwm_set_factor(ref_duty - delta_duty, 'B');
     }
 }

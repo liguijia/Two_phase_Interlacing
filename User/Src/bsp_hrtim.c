@@ -21,10 +21,9 @@ uint16_t PWM_FSBB_PERIOD_FULL = PERIOD_FSBB;     // FSBB周期长度全位置
 uint16_t PWM_FSBB_PERIOD_HALF = PERIOD_FSBB / 2; // FSBB周期长度半位置
 uint16_t PWM_FSBB_PERIOD_ZERO = 0;               // FSBB周期长度零位置
 
-
 uint16_t MASTER_TIMER_PERIOD_MAX = PERIOD_MASTERTIMER; // Master Timer 最大周期
 
-// 测试用HRITM PWM输出初始化（已在CUBEMX中配置）
+// 测试HRITM PWM输出 （初始化已在CUBEMX中配置）
 void HRTIM_PWM_init(void)
 {
     //
@@ -106,4 +105,46 @@ void HRTIM_PWM_duty_set(float dutyCycle, char channel)
             Error_Handler();
             break;
     }
+}
+
+// 设置两相交错的相位交错角度，初始为180°交错
+void HRTIM_Phase_shift_angle_set(float angle, uint8_t mode)
+{
+    // 静态变量用于保存当前相位角（默认交错180°）
+    static float phase_angle = 180.0f;
+
+    // 根据模式选择处理逻辑
+    if (mode == 0) {
+        // 绝对角度模式：直接使用输入的角度值
+        phase_angle = angle;
+    } else if (mode == 1) {
+        // 增量更新模式：在当前角度基础上叠加增量
+        phase_angle += angle;
+    }
+
+    // 1. 相位角归一化处理 --------------------------------------------------
+
+    // 将角度限制在[-180°, 180°]范围内
+    while (phase_angle > 180.0f) {
+        phase_angle -= 360.0f;
+    }
+    while (phase_angle < -180.0f) {
+        phase_angle += 360.0f;
+    }
+
+    // 2. 角度到比较值的转换 ------------------------------------------------
+
+    // 计算相位偏移对应的计数值（带四舍五入）
+    float phase_ratio = (phase_angle + 180.0f) / 360.0f;              // 转换为[0,1]范围
+    uint32_t compare2 = (uint32_t)(phase_ratio * PERIOD_FSBB + 0.5f); // 手动实现四舍五入
+
+    // 3. 边界保护 --------------------------------------------------------
+    // 确保比较值在[1, PERIOD-1]范围内（避免0%和100%占空比）
+    compare2 = compare2 % PERIOD_FSBB;
+    compare2 = (compare2 == 0) ? 1 : compare2;
+    compare2 = (compare2 >= PERIOD_FSBB) ? (PERIOD_FSBB - 1) : compare2;
+
+    // 4. 硬件寄存器配置 ---------------------------------------------------
+    // 更新比较寄存器（TIMER_B的比较单元2）
+    __HAL_HRTIM_SETCOMPARE(&hhrtim1, HRTIM_TIMERINDEX_TIMER_B, HRTIM_COMPAREUNIT_2, compare2);
 }

@@ -10,7 +10,7 @@
 #define ADC1_DATA_LEN      (4U)
 #define ADC2_DATA_LEN      (3U)
 
-#define FILTER_WINDOW_SIZE 256 // 定义滤波窗口大小
+#define FILTER_WINDOW_SIZE 128 // 定义滤波窗口大小
 
 uint16_t adc1_data[ADC1_DATA_LEN * 2] = {0};
 uint16_t adc2_data[ADC2_DATA_LEN * 2] = {0};
@@ -99,8 +99,8 @@ void get_all_analog_data(analogdata_t *data)
                                          &adc_cali_array[0].v_output);
 
     // 电流采样
-    data->i_input  = get_mapped_value(&i_pha_input_filter,
-                                      &adc_cali_array[0].i_pha_input);
+    data->i_input      = get_mapped_value(&i_pha_input_filter,
+                                          &adc_cali_array[0].i_pha_input);
     data->i_phb_input  = get_mapped_value(&i_phb_input_filter,
                                           &adc_cali_array[0].i_phb_input);
     data->i_pha_input  = data->i_input - data->i_phb_input;
