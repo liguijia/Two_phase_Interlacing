@@ -1,0 +1,36 @@
+
+
+GraphedExpression="(analogdata).v_output", Color=#e56a6f
+GraphedExpression="ref_duty1", Color=#35792b
+GraphedExpression="ref_duty2", Color=#769dda
+OpenDocument="stm32g4xx_hal.c", FilePath="d:/Codes/Two_phase_Interlacing/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c", Line=400
+OpenDocument="startup_stm32g474rbtx.s", FilePath="d:/Codes/Two_phase_Interlacing/Core/Startup/startup_stm32g474rbtx.s", Line=51
+OpenDocument="main.c", FilePath="d:/Codes/Two_phase_Interlacing/Core/Src/main.c", Line=62
+OpenDocument="stm32g4xx_hal_dma.c", FilePath="d:/Codes/Two_phase_Interlacing/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.c", Line=769
+OpenDocument="mean_filter.c", FilePath="d:/Codes/Two_phase_Interlacing/User/Src/mean_filter.c", Line=14
+OpenDocument="bsp_hrtim.c", FilePath="d:/Codes/Two_phase_Interlacing/User/Src/bsp_hrtim.c", Line=81
+OpenDocument="two_phase_fsbb_ctrl.c", FilePath="d:/Codes/Two_phase_Interlacing/User/Src/two_phase_fsbb_ctrl.c", Line=239
+OpenDocument="analog_signal.c", FilePath="d:/Codes/Two_phase_Interlacing/User/Src/analog_signal.c", Line=171
+OpenToolbar="Debug", Floating=0, x=0, y=0
+OpenWindow="Registers 1", DockArea=RIGHT, x=0, y=1, w=586, h=473, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, FilteredItems=[], RefreshRate=1
+OpenWindow="Source Files", DockArea=LEFT, x=0, y=0, w=777, h=534, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Memory 1", DockArea=BOTTOM, x=2, y=0, w=643, h=444, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, EditorAddress=0x0
+OpenWindow="Global Data", DockArea=RIGHT, x=0, y=0, w=586, h=177, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Watched Data 1", DockArea=LEFT, x=0, y=1, w=777, h=418, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Data Sampling", DockArea=RIGHT, x=0, y=2, w=586, h=301, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, VisibleTab=0, UniformSampleSpacing=0
+OpenWindow="Timeline", DockArea=BOTTOM, x=1, y=0, w=1514, h=444, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=1, DataPaneShown=1, PowerPaneShown=0, CodePaneShown=0, PinCursor="Cursor Movable", TimePerDiv="500 ms / Div", TimeStampFormat="Time", DataGraphDrawAsPoints=0, DataGraphLegendShown=1, DataGraphUniformSampleSpacing=0, DataGraphLegendPosition="0;0", DataGraphShowNamesAtCursor=0, PowerGraphDrawAsPoints=0, PowerGraphLegendShown=0, PowerGraphAvgFilterTime=Off, PowerGraphAvgFilterLen=Off, PowerGraphUniformSampleSpacing=0, PowerGraphLegendPosition="1250;0", CodeGraphLegendShown=0, CodeGraphLegendPosition="1271;0"
+OpenWindow="Console", DockArea=BOTTOM, x=0, y=0, w=401, h=444, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+SmartViewPlugin="", Page="", Toolbar="Hidden", Window="SmartView 1"
+TableHeader="Global Data", SortCol="Name", SortOrder="ASCENDING", VisibleCols=["Name";"Value";"Location";"Size";"Type";"Scope"], ColWidths=[100;100;120;100;100;514]
+TableHeader="Source Files", SortCol="File", SortOrder="ASCENDING", VisibleCols=["File";"Status";"Size";"#Insts";"Path"], ColWidths=[270;100;100;100;1304]
+TableHeader="Data Sampling Table", SortCol="None", SortOrder="ASCENDING", VisibleCols=["Index";"Time";" (analogdata).v_output";" ref_duty1";" ref_duty2"], ColWidths=[100;100;100;100;100]
+TableHeader="Data Sampling Setup", SortCol="Expression", SortOrder="ASCENDING", VisibleCols=["Expression";"Type";"Value";"Min";"Max";"Average";"# Changes";"Min. Change";"Max. Change"], ColWidths=[254;100;100;168;179;110;130;150;150]
+TableHeader="Power Sampling", SortCol="None", SortOrder="ASCENDING", VisibleCols=["Index";"Time";"Ch 0"], ColWidths=[100;100;100]
+TableHeader="Registers 1", SortCol="Name", SortOrder="ASCENDING", VisibleCols=["Name";"Value";"Description"], ColWidths=[100;157;299]
+TableHeader="Watched Data 1", SortCol="Expression", SortOrder="ASCENDING", VisibleCols=["Expression";"Value";"Location";"Refresh"], ColWidths=[120;456;100;101]
+TableHeader="RegisterSelectionDialog", SortCol="None", SortOrder="ASCENDING", VisibleCols=[], ColWidths=[]
+WatchedExpression="analogdata", RefreshRate=5, Window=Watched Data 1
+WatchedExpression="ref_duty0", RefreshRate=5, Window=Watched Data 1
+WatchedExpression="ref_duty1", RefreshRate=5, Window=Watched Data 1
+WatchedExpression="ref_duty2", RefreshRate=5, Window=Watched Data 1
+WatchedExpression="delta_duty", RefreshRate=5, Window=Watched Data 1

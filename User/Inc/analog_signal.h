@@ -21,14 +21,14 @@ extern analogdata_t analogdata;
 
 extern void BSP_ADC_Convert_Start(void);
 
-extern float get_pha_input_voltage();
-extern float get_phb_input_voltage();
-extern float get_output_voltage();
+// extern float get_pha_input_voltage();
+// extern float get_phb_input_voltage();
+// extern float get_output_voltage();
 
-extern float get_pha_input_current();
-extern float get_phb_input_current();
-extern float get_pha_output_current();
-extern float get_phb_output_current();
+// extern float get_pha_input_current();
+// extern float get_phb_input_current();
+// extern float get_pha_output_current();
+// extern float get_phb_output_current();
 
 extern void get_all_analog_data(analogdata_t *data);
 

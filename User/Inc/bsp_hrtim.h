@@ -9,7 +9,7 @@ extern void HRTIM_PWM_init(void);
 extern void HRTIM_SetTimerAOutput1Polarity(HRTIM_HandleTypeDef *hhrtim, uint32_t polarity);
 extern void HRTIM_PWM_output_start(void);
 extern void HRTIM_PWM_output_stop(void);
-extern void HRTIM_PWM_duty_set(float dutyCycle, char channel);
+extern void HRTIM_PWM_duty_set(float dutyCycle, uint32_t timerIndex);
 extern void HRTIM_Phase_shift_angle_set(float angle, uint8_t mode);
 #ifdef __cplusplus
 }

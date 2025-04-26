@@ -65,7 +65,7 @@ void HRTIM_PWM_output_stop(void)
 }
 
 //
-void HRTIM_PWM_duty_set(float dutyCycle, char channel)
+void HRTIM_PWM_duty_set(float dutyCycle, uint32_t timerIndex)
 {
     // 限制占空比在 0.0 到 1.0 之间
     if (dutyCycle < 0.0f) dutyCycle = 0.0f;
@@ -75,26 +75,26 @@ void HRTIM_PWM_duty_set(float dutyCycle, char channel)
     uint32_t compare3 = 0U;
 
     // 根据通道选择对应的定时器 A 或 E
-    switch (channel) {
-        case 'A':
+    switch (timerIndex) {
+        case HRTIM_TIMERINDEX_TIMER_A:
             compare1 = PWM_FSBB_PERIOD_ZERO + dutyCycle * PWM_FSBB_PERIOD_HALF;
             compare3 = PWM_FSBB_PERIOD_FULL - dutyCycle * PWM_FSBB_PERIOD_HALF;
             __HAL_HRTIM_SETCOMPARE(&hhrtim1, HRTIM_TIMERINDEX_TIMER_A, HRTIM_COMPAREUNIT_1, compare1);
             __HAL_HRTIM_SETCOMPARE(&hhrtim1, HRTIM_TIMERINDEX_TIMER_A, HRTIM_COMPAREUNIT_3, compare3);
             break;
-        case 'B':
+        case HRTIM_TIMERINDEX_TIMER_B:
             compare1 = PWM_FSBB_PERIOD_ZERO + dutyCycle * PWM_FSBB_PERIOD_HALF;
             compare3 = PWM_FSBB_PERIOD_FULL - dutyCycle * PWM_FSBB_PERIOD_HALF;
             __HAL_HRTIM_SETCOMPARE(&hhrtim1, HRTIM_TIMERINDEX_TIMER_B, HRTIM_COMPAREUNIT_1, compare1);
             __HAL_HRTIM_SETCOMPARE(&hhrtim1, HRTIM_TIMERINDEX_TIMER_B, HRTIM_COMPAREUNIT_3, compare3);
             break;
-        case 'C':
+        case HRTIM_TIMERINDEX_TIMER_C:
             compare1 = PWM_FSBB_PERIOD_ZERO + dutyCycle * PWM_FSBB_PERIOD_HALF;
             compare3 = PWM_FSBB_PERIOD_FULL - dutyCycle * PWM_FSBB_PERIOD_HALF;
             __HAL_HRTIM_SETCOMPARE(&hhrtim1, HRTIM_TIMERINDEX_TIMER_C, HRTIM_COMPAREUNIT_1, compare1);
             __HAL_HRTIM_SETCOMPARE(&hhrtim1, HRTIM_TIMERINDEX_TIMER_C, HRTIM_COMPAREUNIT_3, compare3);
             break;
-        case 'D':
+        case HRTIM_TIMERINDEX_TIMER_D:
             compare1 = PWM_FSBB_PERIOD_ZERO + dutyCycle * PWM_FSBB_PERIOD_HALF;
             compare3 = PWM_FSBB_PERIOD_FULL - dutyCycle * PWM_FSBB_PERIOD_HALF;
             __HAL_HRTIM_SETCOMPARE(&hhrtim1, HRTIM_TIMERINDEX_TIMER_D, HRTIM_COMPAREUNIT_1, compare1);

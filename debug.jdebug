@@ -4,9 +4,9 @@
 *                         www.segger.com                             *
 **********************************************************************
 
-File          : D:/Codes/GitHub/Two_phase_Interlacing/debug0.jdebug
-Created       : 22 Mar 2025 13:17
-Ozone Version : V3.34
+File          : D:/Codes/Two_phase_Interlacing/debug.jdebug
+Created       : 26 Apr 2025 02:05
+Ozone Version : V3.38d
 */
 
 /*********************************************************************
@@ -22,18 +22,15 @@ void OnProjectLoad (void) {
   //
   // Dialog-generated settings
   //
-  Project.AddPathSubstitute ("D:/Codes/GitHub/Two_phase_Interlacing", "$(ProjectDir)");
-  Project.AddPathSubstitute ("d:/codes/github/two_phase_interlacing", "$(ProjectDir)");
   Project.SetDevice ("Cortex-M4");
   Project.SetHostIF ("USB", "");
   Project.SetTargetIF ("SWD");
   Project.SetTIFSpeed ("4 MHz");
   Project.AddSvdFile ("$(InstallDir)/Config/CPU/Cortex-M4F.svd");
-  Project.AddSvdFile ("$(InstallDir)/Config/Peripherals/g4/STM32G474xx.svd");
   //
   // User settings
   //
-  File.Open ("$(ProjectDir)/build/Debug/Two_phase_Interlacing.elf");
+  File.Open ("D:/Codes/Two_phase_Interlacing/build/Debug/Two_phase_Interlacing.elf");
 }
 
 /*********************************************************************
@@ -310,6 +307,19 @@ void AfterTargetDownload (void) {
 **********************************************************************
 */
 //void AfterProjectLoad (void) {
+//}
+
+/*********************************************************************
+*
+*       OnDebugStartBreakSymbolReached
+*
+* Function description
+*   Called when program execution has reached/passed
+*   the symbol to be breaked at during debug start. Optional.
+*
+**********************************************************************
+*/
+//void OnDebugStartBreakSymReached (void) {
 //}
 
 /*********************************************************************

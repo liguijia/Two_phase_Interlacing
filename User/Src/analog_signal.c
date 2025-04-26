@@ -111,56 +111,56 @@ void get_all_analog_data(analogdata_t *data)
     data->i_output     = data->i_pha_output + data->i_phb_output;
 }
 
-// 获取单独模拟量
-float get_pha_input_voltage()
-{
-    uint16_t adc_value_average = mean_filter_calculate_average(&v_pha_input_filter);
-    float mapped_value         = linear_map(adc_value_average, adc_cali_array[0].v_pha_input);
-    return mapped_value;
-}
+// // 获取单独模拟量
+// float get_pha_input_voltage()
+// {
+//     uint16_t adc_value_average = mean_filter_calculate_average(&v_pha_input_filter);
+//     float mapped_value         = linear_map(adc_value_average, adc_cali_array[0].v_pha_input);
+//     return mapped_value;
+// }
 
-float get_phb_input_voltage()
-{
-    uint16_t adc_value_average = mean_filter_calculate_average(&v_phb_input_filter);
-    float mapped_value         = linear_map(adc_value_average, adc_cali_array[0].v_phb_input);
-    return mapped_value;
-}
+// float get_phb_input_voltage()
+// {
+//     uint16_t adc_value_average = mean_filter_calculate_average(&v_phb_input_filter);
+//     float mapped_value         = linear_map(adc_value_average, adc_cali_array[0].v_phb_input);
+//     return mapped_value;
+// }
 
-float get_output_voltage()
-{
-    uint16_t adc_value_average = mean_filter_calculate_average(&v_output_filter);
-    float mapped_value         = linear_map(adc_value_average, adc_cali_array[0].v_output);
-    return mapped_value;
-}
+// float get_output_voltage()
+// {
+//     uint16_t adc_value_average = mean_filter_calculate_average(&v_output_filter);
+//     float mapped_value         = linear_map(adc_value_average, adc_cali_array[0].v_output);
+//     return mapped_value;
+// }
 
-float get_pha_input_current()
-{
-    uint16_t adc_value_average = mean_filter_calculate_average(&i_pha_input_filter);
-    float mapped_value         = linear_map(adc_value_average, adc_cali_array[0].i_pha_input);
-    return mapped_value;
-}
-float get_phb_input_current()
-{
-    uint16_t adc_value_average = mean_filter_calculate_average(&i_phb_input_filter);
-    float mapped_value         = linear_map(adc_value_average, adc_cali_array[0].i_phb_input);
-    return mapped_value;
-}
-float get_pha_output_current()
-{
-    uint16_t adc_value_average = mean_filter_calculate_average(&i_pha_output_filter);
-    float mapped_value         = linear_map(adc_value_average, adc_cali_array[0].i_pha_output);
-    return mapped_value;
-}
-float get_phb_output_current()
-{
-    uint16_t adc_value_average = mean_filter_calculate_average(&i_phb_output_filter);
-    float mapped_value         = linear_map(adc_value_average, adc_cali_array[0].i_phb_output);
-    return mapped_value;
-}
-float get_output_current()
-{
-    return get_pha_output_current() + get_phb_output_current();
-}
+// float get_pha_input_current()
+// {
+//     uint16_t adc_value_average = mean_filter_calculate_average(&i_pha_input_filter);
+//     float mapped_value         = linear_map(adc_value_average, adc_cali_array[0].i_pha_input);
+//     return mapped_value;
+// }
+// float get_phb_input_current()
+// {
+//     uint16_t adc_value_average = mean_filter_calculate_average(&i_phb_input_filter);
+//     float mapped_value         = linear_map(adc_value_average, adc_cali_array[0].i_phb_input);
+//     return mapped_value;
+// }
+// float get_pha_output_current()
+// {
+//     uint16_t adc_value_average = mean_filter_calculate_average(&i_pha_output_filter);
+//     float mapped_value         = linear_map(adc_value_average, adc_cali_array[0].i_pha_output);
+//     return mapped_value;
+// }
+// float get_phb_output_current()
+// {
+//     uint16_t adc_value_average = mean_filter_calculate_average(&i_phb_output_filter);
+//     float mapped_value         = linear_map(adc_value_average, adc_cali_array[0].i_phb_output);
+//     return mapped_value;
+// }
+// float get_output_current()
+// {
+//     return get_pha_output_current() + get_phb_output_current();
+// }
 
 // ADC采样初始化
 void BSP_ADC_Convert_Start(void)
